@@ -10,3 +10,8 @@ apk定制工具，用于渠道打包等自定义apk。此工具使用JavaFX需�
 
 ### 配置
 一些参数配置在apktool.json里面
+
+### 感谢以下项目
+[Apktool](http://ibotpeaches.github.io/Apktool/)<br>
+[fastjson](https://github.com/alibaba/fastjson)<br>
+[dom4j]()
