@@ -1,5 +1,5 @@
 # ApkCustomizationTool
-apk定制工具，用于渠道打包等自定义apk
+apk定制工具，用于渠道打包等自定义apk。此工具使用JavaFX需要Java8以上的支持
 
 ### 功能
 |功能|
