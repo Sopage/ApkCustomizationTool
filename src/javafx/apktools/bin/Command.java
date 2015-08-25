@@ -22,10 +22,6 @@ public class Command {
      */
     private Callback callback;
 
-    public Command() {
-
-    }
-
     public Command(Callback callback) {
         this.callback = callback;
     }
@@ -36,8 +32,8 @@ public class Command {
      * @param apkFilePath apk文件路径
      * @param outPath     解压路径
      */
-    public void decodeApk(String apkFilePath, String outPath) {
-        executeCommand("java", "-jar", "apktool.jar", "d", "-f", apkFilePath, "-o", outPath);
+    public boolean decodeApk(String apkFilePath, String outPath) {
+        return executeCommand("java", "-jar", "apktool.jar", "d", "-f", apkFilePath, "-o", outPath);
     }
 
     /**
@@ -46,8 +42,8 @@ public class Command {
      * @param buildApkFolderPath 解包apk后的文件夹路径
      * @param buildApkOutPath    打包后的文件存放路径
      */
-    public void buildApk(String buildApkFolderPath, String buildApkOutPath) {
-        executeCommand("java", "-jar", "apktool.jar", "b", buildApkFolderPath, "-o", buildApkOutPath);
+    public boolean buildApk(String buildApkFolderPath, String buildApkOutPath) {
+        return executeCommand("java", "-jar", "apktool.jar", "b", buildApkFolderPath, "-o", buildApkOutPath);
     }
 
     /**
@@ -59,9 +55,8 @@ public class Command {
      * @param alias            签名文件的alias名称
      * @param password         签名文件密码
      */
-    public void signerApkByTime(String keystoreFilePath, String apkFilePath, String alias, String password) {
-//        executeCommand("jarsigner", "-verbose", "-sigalg", "SHA1withRSA", "-tsa", "https://timestamp.geotrust.com/tsa", "-digestalg", "SHA1", "-keystore", "签名文件", apkFilePath, "签名文件alias名称", "-storepass", "签名密码");
-        executeCommand("jarsigner", "-verbose", "-sigalg", "SHA1withRSA", "-tsa", "https://timestamp.geotrust.com/tsa", "-digestalg", "SHA1", "-keystore", keystoreFilePath, apkFilePath, alias, "-storepass", password);
+    public boolean signerApkByTime(String keystoreFilePath, String apkFilePath, String alias, String password) {
+        return executeCommand("jarsigner", "-verbose", "-sigalg", "SHA1withRSA", "-tsa", "https://timestamp.geotrust.com/tsa", "-digestalg", "SHA1", "-keystore", keystoreFilePath, apkFilePath, alias, "-storepass", password);
     }
 
     /**
@@ -73,8 +68,8 @@ public class Command {
      * @param alias            签名文件的alias名称
      * @param password         签名文件密码
      */
-    public void signerApk(String keystoreFilePath, String apkFilePath, String alias, String password) {
-        executeCommand("jarsigner", "-verbose", "-sigalg", "SHA1withRSA", "-digestalg", "SHA1", "-keystore", keystoreFilePath, apkFilePath, alias, "-storepass", password);
+    public boolean signerApk(String keystoreFilePath, String apkFilePath, String alias, String password) {
+        return executeCommand("jarsigner", "-verbose", "-sigalg", "SHA1withRSA", "-digestalg", "SHA1", "-keystore", keystoreFilePath, apkFilePath, alias, "-storepass", password);
     }
 
     /**
@@ -84,8 +79,8 @@ public class Command {
      * @param apkFilePath 要优化的apk文件路径
      * @param outFilePath 优化后的apk存放文件路径
      */
-    public void zipalign(String apkFilePath, String outFilePath) {
-        executeCommand("zipalign", "-f", "-v", "4", apkFilePath, outFilePath);
+    public boolean zipalign(String apkFilePath, String outFilePath) {
+        return executeCommand("zipalign", "-f", "-v", "4", apkFilePath, outFilePath);
     }
 
     /**
@@ -107,6 +102,9 @@ public class Command {
      * @param outputFile 被替换文件文件路径
      */
     private void copyFile(File inputFile, File outputFile) {
+        if(!inputFile.exists()){
+            return;
+        }
         if (inputFile.isDirectory()) {
             File[] listFile = inputFile.listFiles((pathname) -> !pathname.getName().startsWith("."));
             for (File inFile : listFile) {
@@ -118,7 +116,7 @@ public class Command {
                 return;
             }
             if (callback != null) {
-                callback.receiver(String.format("Copy file [%s] >>>>>>>>>> [%s] \r\n", inputFile.getPath(), outputFile.getPath()));
+                callback.receiver(String.format("拷贝文件 [%s] 至——————> [%s] \r\n", inputFile.getPath(), outputFile.getPath()));
             }
             copyFileStream(inputFile, outputFile);
         }
@@ -130,9 +128,9 @@ public class Command {
      * @param appFolderName AndroidManifest.xml文件所在路径
      * @param manifest      要修改的信息
      */
-    public void updateAndroidManifest(String appFolderName, Manifest manifest) {
+    public boolean updateAndroidManifest(String appFolderName, Manifest manifest) {
         if (manifest == null) {
-            return;
+            return false;
         }
         try {
             File androidManifestFile = new File(appFolderName + File.separator + "AndroidManifest.xml");
@@ -148,7 +146,7 @@ public class Command {
                     if (attribute.getValue().equals(name)) {
                         s.attribute("value").setValue(value);
                         if (callback != null) {
-                            callback.receiver("update AndroidManifest.xml meta-data name=" + attribute.getValue() + " value=" + value + "\r\n");
+                            callback.receiver("更新 AndroidManifest.xml meta-data name=" + attribute.getValue() + " value=" + value + "\r\n");
                         }
                     }
                 }
@@ -163,11 +161,13 @@ public class Command {
             writer.write(document);
             writer.close();
             if (callback != null) {
-                callback.receiver("update AndroidManifest.xml OK ~ " + "\r\n");
+                callback.receiver("更新 AndroidManifest.xml 完成 ~ " + "\r\n");
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     /**
@@ -176,7 +176,7 @@ public class Command {
      * @param appFolderName apktool.yml文件所在路径
      * @param versionName   要改的版本名称
      */
-    public void updateApktoolYmlVersion(String appFolderName, String versionName) {
+    public boolean updateApkToolYmlVersion(String appFolderName, String versionName) {
         try {
             File apkToolYmlFile = new File(appFolderName + File.separator + "apktool.yml");
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(apkToolYmlFile)));
@@ -186,12 +186,12 @@ public class Command {
                 if (line.contains("versionCode")) {
                     line = "  versionCode: '" + getVersionCode(versionName) + "'";
                     if (callback != null) {
-                        callback.receiver("update apktool.yml " + line + "\r\n");
+                        callback.receiver("更新 apktool.yml " + line + "\r\n");
                     }
                 } else if (line.contains("versionName")) {
                     line = "  versionName: '" + versionName + "'";
                     if (callback != null) {
-                        callback.receiver("update apktool.yml " + line + "\r\n");
+                        callback.receiver("更新 apktool.yml " + line + "\r\n");
                     }
                 }
                 sb.append(line).append("\r\n");
@@ -200,9 +200,14 @@ public class Command {
             FileOutputStream out = new FileOutputStream(apkToolYmlFile);
             out.write(sb.toString().getBytes());
             out.close();
+            if (callback != null) {
+                callback.receiver("更新 apktool.yml 完成 ~ " + "\r\n");
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     /**
@@ -210,7 +215,7 @@ public class Command {
      *
      * @param command 命令
      */
-    private synchronized void executeCommand(String... command) {
+    private synchronized boolean executeCommand(String... command) {
         Process process = null;
         BufferedReader reader = null;
         try {
@@ -227,12 +232,14 @@ public class Command {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         } finally {
             close(reader);
             if (process != null) {
                 process.destroy();
             }
         }
+        return true;
     }
 
     /**
@@ -279,7 +286,7 @@ public class Command {
      * @param inFile  被拷贝的文件
      * @param outFile 拷贝的文件
      */
-    public void copyFileStream(File inFile, File outFile) {
+    public boolean copyFileStream(File inFile, File outFile) {
         FileInputStream inputStream = null;
         FileOutputStream outputStream = null;
         FileChannel inChannel = null, outChannel = null;
@@ -289,13 +296,13 @@ public class Command {
             inChannel = inputStream.getChannel();
             outChannel = outputStream.getChannel();
             inChannel.transferTo(0, inFile.length(), outChannel);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         } finally {
             close(outChannel, inChannel, outputStream, inputStream);
         }
+        return true;
     }
 
     /**

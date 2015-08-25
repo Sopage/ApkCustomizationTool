@@ -8,7 +8,8 @@ public class MetaData {
     private String name;
     private String value;
 
-    public MetaData() {
+    public MetaData(){
+
     }
 
     public MetaData(String name, String value) {
@@ -35,7 +36,7 @@ public class MetaData {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
-            return true;
+            return false;
         }
         if (obj instanceof MetaData) {
             MetaData md = (MetaData) obj;
@@ -51,9 +52,6 @@ public class MetaData {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (name == null ? 0 : name.hashCode()) + (value == null ? 0 : value.hashCode());
-        return result;
+        return name.hashCode() + value.hashCode();
     }
 }

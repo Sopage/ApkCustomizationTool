@@ -1,10 +1,9 @@
 package javafx.apktools;
 
-import javafx.apktools.model.BuildConfig;
-import javafx.apktools.model.Channel;
-import javafx.apktools.model.Person;
-import javafx.apktools.model.Product;
-import javafx.apktools.model.manifest.MetaData;
+import javafx.apktools.model.BuildInfo;
+import javafx.apktools.model.config.Channel;
+import javafx.apktools.model.config.Person;
+import javafx.apktools.model.config.Product;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,10 +21,13 @@ import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainController extends Controller<MainController> {
+
+    public static long actionTime;
 
     public ComboBox<Product> product;
     public ComboBox<Channel> channel;
@@ -34,11 +36,14 @@ public class MainController extends Controller<MainController> {
     public ImageView image;
 
     private FileChooser fileChooser;
-    private Stage buildStage;
+    public Stage buildStage, addChannelStage;
 
-    private BuildConfig info = new BuildConfig();
+    private BuildInfo info = new BuildInfo();
 
     public void btnCustomAction() {
+        if (!actionTime()) {
+            return;
+        }
         String versionText = version.getText();
         if (versionText == null || versionText.trim().length() == 0) {
             new Alert(Alert.AlertType.WARNING, "请填写版本名称", ButtonType.OK).show();
@@ -50,14 +55,17 @@ public class MainController extends Controller<MainController> {
             return;
         }
         if (getBuildStage() != null) {
-            info.manifest.getMetaData().add(new MetaData("qudao", info.channel.mark));
-            info.manifest.getMetaData().add(new MetaData("renyuan", info.person.mark));
-            buildStage.show();
+            if (!buildStage.isShowing()) {
+                buildStage.show();
+            }
             getController(ApkBuildController.class).build(info);
         }
     }
 
     public void btnFileChooser() {
+        if (!actionTime()) {
+            return;
+        }
         if (fileChooser == null) {
             fileChooser = new FileChooser();
         }
@@ -66,6 +74,15 @@ public class MainController extends Controller<MainController> {
             File file = list.get(0);
             info.apkFile = file;
             buildFile.setText(file.getName());
+        }
+    }
+
+    public void btnAddChannel() {
+        if (!actionTime()) {
+            return;
+        }
+        if (getAddChannelStage() != null) {
+            getAddChannelStage().show();
         }
     }
 
@@ -78,7 +95,28 @@ public class MainController extends Controller<MainController> {
     }
 
     public void channelAction() {
-        info.channel = channel.getSelectionModel().getSelectedItem();
+        info.channel.clear();
+        Channel c = channel.getSelectionModel().getSelectedItem();
+        if ("ALL".equals(c.mark)) {
+            Channel[] cc = new Channel[channel.getItems().size()];
+            channel.getItems().toArray(cc);
+            info.channel.addAll(Arrays.asList(cc));
+        } else {
+            info.channel.add(c);
+        }
+    }
+
+    public void addNewChannel(String name, String mark) {
+        Channel c = new Channel();
+        c.name = name;
+        c.mark = mark;
+        channel.getItems().remove(c);
+        channel.getItems().add(c);
+        channel.getSelectionModel().select(c);
+        File file = new File("渠道包" + File.separator + name);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
     }
 
     @Override
@@ -90,13 +128,13 @@ public class MainController extends Controller<MainController> {
         list.addAll(products);
         product.getSelectionModel().select(0);
         info.product = product.getSelectionModel().getSelectedItem();
-        version.setText(info.product.beforeVersion);
 
         List<Channel> channels = ApkConfig.getConfig().getChannelList();
+        addDefChannel(channels);
         list = channel.getItems();
         list.addAll(channels);
         channel.getSelectionModel().select(0);
-        info.channel = channel.getSelectionModel().getSelectedItem();
+        info.channel.addAll(channels);
 
         List<Person> persons = ApkConfig.getConfig().getPersonList();
         list = person.getItems();
@@ -106,9 +144,16 @@ public class MainController extends Controller<MainController> {
 
         info.manifest = ApkConfig.getConfig().getManifest();
         info.resource = ApkConfig.getConfig().getResource();
-        version.setText("6.1.0");
+        version.setText("6.1.1");
         info.version = version.getText();
 
+    }
+
+    public void addDefChannel(List<Channel> channels) {
+        Channel c = new Channel();
+        c.name = "全部渠道";
+        c.mark = "ALL";
+        channels.add(0, c);
     }
 
     public Stage getBuildStage() {
@@ -133,6 +178,37 @@ public class MainController extends Controller<MainController> {
             }
         }
         return buildStage;
+    }
+
+
+    public Stage getAddChannelStage() {
+        if (addChannelStage == null) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("fxml/add_channel.fxml"));
+                addChannelStage = new Stage();
+                addChannelStage.setTitle("APK定制工具(YoYo~专版)");
+                addChannelStage.setScene(new Scene(root));
+                addChannelStage.initModality(Modality.WINDOW_MODAL);
+                addChannelStage.initStyle(StageStyle.UNIFIED);
+                addChannelStage.setResizable(false);
+                addChannelStage.initOwner(Main.stage);
+                addChannelStage.setOnShown((event) -> {
+                    getController(AddChannelController.class).initialized(null, null);
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                addChannelStage = null;
+            }
+        }
+        return addChannelStage;
+    }
+
+    public boolean actionTime() {
+        if (System.currentTimeMillis() - actionTime > 600) {
+            actionTime = System.currentTimeMillis();
+            return true;
+        }
+        return false;
     }
 
     @Override

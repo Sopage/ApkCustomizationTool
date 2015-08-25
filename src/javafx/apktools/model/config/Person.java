@@ -1,4 +1,4 @@
-package javafx.apktools.model;
+package javafx.apktools.model.config;
 
 public class Person {
 

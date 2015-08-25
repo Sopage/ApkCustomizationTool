@@ -1,4 +1,4 @@
-package javafx.apktools.model;
+package javafx.apktools.model.config;
 
 /**
  * Created by sanders on 15/7/19.
@@ -6,7 +6,6 @@ package javafx.apktools.model;
 public class Product {
 
     public String name;
-    public String beforeVersion;
 
     @Override
     public String toString() {

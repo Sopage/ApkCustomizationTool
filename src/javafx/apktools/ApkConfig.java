@@ -2,6 +2,9 @@ package javafx.apktools;
 
 import com.alibaba.fastjson.JSON;
 import javafx.apktools.model.*;
+import javafx.apktools.model.config.Channel;
+import javafx.apktools.model.config.Person;
+import javafx.apktools.model.config.Product;
 import javafx.apktools.model.manifest.Manifest;
 import javafx.apktools.model.resource.Resource;
 

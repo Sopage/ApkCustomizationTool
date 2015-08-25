@@ -1,6 +1,6 @@
 package javafx.apktools;
 
-import javafx.apktools.model.Channel;
+import javafx.apktools.model.config.Channel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,7 +35,7 @@ public class Main extends Application {
     public static void main(String[] args) {
         new Thread(() -> {
             File file;
-            String[] folders = {"drawable", "drawable-hdpi", "drawable-mdpi", "drawable-xhdpi", "drawable-xxhdpi", "drawable-xxxhdpi", "values", "raw", "xml"};
+            String[] folders = {"drawable", "drawable-hdpi", "drawable-mdpi", "drawable-xhdpi", "drawable-xxhdpi"};
             List<Channel> channels = ApkConfig.getConfig().getChannelList();
             String root = "渠道资源";
             String apk = "渠道包";
