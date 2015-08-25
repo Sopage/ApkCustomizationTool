@@ -68,7 +68,7 @@ public class ApkBuildController extends Controller<ApkBuildController> implement
                 command.buildApk(buildApkFolderName, buildApkOutputFile);
                 setText("---------------------------  打包完成，开始签名  ---------------------------\r\n");
                 //不带时间戳的签名
-                command.signerApk("handsgo.keystore", buildApkOutputFile, "handsgo.keystore", "978%^6b82c7d5");
+                command.signerApk("签名文件", buildApkOutputFile, "alli", "密码");
                 setText("---------------------------  签名完成，开始优化  ---------------------------\r\n");
                 //zipalign优化
                 command.zipalign(buildApkOutputFile, zipalignApkOutputFile);
