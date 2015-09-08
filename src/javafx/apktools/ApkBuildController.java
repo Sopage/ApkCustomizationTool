@@ -2,7 +2,7 @@ package javafx.apktools;
 
 import javafx.apktools.bin.Callback;
 import javafx.apktools.bin.Command;
-import javafx.apktools.model.BuildInfo;
+import javafx.apktools.model.BuildParams;
 import javafx.apktools.model.config.Channel;
 import javafx.apktools.model.manifest.MetaData;
 import javafx.application.Platform;
@@ -31,8 +31,8 @@ public class ApkBuildController extends Controller<ApkBuildController> implement
         setText(message);
     }
 
-    public void build(final BuildInfo params) {
-        if(build){
+    public void build(BuildParams params) {
+        if (build) {
             new Alert(Alert.AlertType.WARNING, "打包中... 完成后请再次操作", ButtonType.OK).show();
             return;
         }
@@ -67,8 +67,13 @@ public class ApkBuildController extends Controller<ApkBuildController> implement
                 //用apktool重新打包
                 command.buildApk(buildApkFolderName, buildApkOutputFile);
                 setText("---------------------------  打包完成，开始签名  ---------------------------\r\n");
-                //不带时间戳的签名
-                command.signerApk("签名文件", buildApkOutputFile, "alli", "密码");
+                if (params.signerTSA) {
+                    //带时间戳的签名
+                    command.signerApkByTime(params.keyStoreFilePath, buildApkOutputFile, params.keyStoreAlias, params.keyStorePassword);
+                } else {
+                    //不带时间戳的签名
+                    command.signerApk(params.keyStoreFilePath, buildApkOutputFile, params.keyStoreAlias, params.keyStorePassword);
+                }
                 setText("---------------------------  签名完成，开始优化  ---------------------------\r\n");
                 //zipalign优化
                 command.zipalign(buildApkOutputFile, zipalignApkOutputFile);

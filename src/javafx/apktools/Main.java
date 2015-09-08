@@ -36,7 +36,7 @@ public class Main extends Application {
         new Thread(() -> {
             File file;
             String[] folders = {"drawable", "drawable-hdpi", "drawable-mdpi", "drawable-xhdpi", "drawable-xxhdpi"};
-            List<Channel> channels = ApkConfig.getConfig().getChannelList();
+            List<Channel> channels = ApkConfig.getConfig().getConfigInfo().getChannel();
             String root = "渠道资源";
             String apk = "渠道包";
             for (Channel channel : channels) {

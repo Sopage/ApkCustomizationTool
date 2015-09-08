@@ -1,6 +1,6 @@
 package javafx.apktools;
 
-import javafx.apktools.model.BuildInfo;
+import javafx.apktools.model.BuildParams;
 import javafx.apktools.model.config.Channel;
 import javafx.apktools.model.config.Person;
 import javafx.apktools.model.config.Product;
@@ -38,7 +38,7 @@ public class MainController extends Controller<MainController> {
     private FileChooser fileChooser;
     public Stage buildStage, addChannelStage;
 
-    private BuildInfo info = new BuildInfo();
+    private BuildParams info = new BuildParams();
 
     public void btnCustomAction() {
         if (!actionTime()) {
@@ -123,27 +123,27 @@ public class MainController extends Controller<MainController> {
     public void initialized(URL location, ResourceBundle resources) {
         image.setImage(new Image("/ic_launcher.png"));
 
-        List<Product> products = ApkConfig.getConfig().getProductList();
+        List<Product> products = ApkConfig.getConfig().getConfigInfo().getProduct();
         ObservableList list = product.getItems();
         list.addAll(products);
         product.getSelectionModel().select(0);
         info.product = product.getSelectionModel().getSelectedItem();
 
-        List<Channel> channels = ApkConfig.getConfig().getChannelList();
+        List<Channel> channels = ApkConfig.getConfig().getConfigInfo().getChannel();
         addDefChannel(channels);
         list = channel.getItems();
         list.addAll(channels);
         channel.getSelectionModel().select(0);
         info.channel.addAll(channels);
 
-        List<Person> persons = ApkConfig.getConfig().getPersonList();
+        List<Person> persons = ApkConfig.getConfig().getConfigInfo().getPerson();
         list = person.getItems();
         list.addAll(persons);
         person.getSelectionModel().select(0);
         info.person = person.getSelectionModel().getSelectedItem();
 
-        info.manifest = ApkConfig.getConfig().getManifest();
-        info.resource = ApkConfig.getConfig().getResource();
+        info.manifest = ApkConfig.getConfig().getConfigInfo().getManifest();
+        info.resource = ApkConfig.getConfig().getConfigInfo().getResource();
         version.setText("6.1.1");
         info.version = version.getText();
 

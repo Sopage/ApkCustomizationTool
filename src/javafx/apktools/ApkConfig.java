@@ -1,18 +1,12 @@
 package javafx.apktools;
 
 import com.alibaba.fastjson.JSON;
-import javafx.apktools.model.*;
-import javafx.apktools.model.config.Channel;
-import javafx.apktools.model.config.Person;
-import javafx.apktools.model.config.Product;
-import javafx.apktools.model.manifest.Manifest;
-import javafx.apktools.model.resource.Resource;
+import javafx.apktools.model.ConfigInfo;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 public class ApkConfig {
 
@@ -43,24 +37,7 @@ public class ApkConfig {
 
     }
 
-    public List<Product> getProductList() {
-        return configInfo.getProduct();
+    public ConfigInfo getConfigInfo() {
+        return configInfo;
     }
-
-    public List<Person> getPersonList() {
-        return configInfo.getPerson();
-    }
-
-    public List<Channel> getChannelList() {
-        return configInfo.getChannel();
-    }
-
-    public Manifest getManifest(){
-        return configInfo.getManifest();
-    }
-
-    public Resource getResource(){
-        return configInfo.getResource();
-    }
-
 }
