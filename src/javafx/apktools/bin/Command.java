@@ -2,6 +2,7 @@ package javafx.apktools.bin;
 
 import javafx.apktools.model.manifest.Manifest;
 import javafx.apktools.model.manifest.MetaData;
+import javafx.apktools.model.resource.Strings;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -102,7 +103,7 @@ public class Command {
      * @param outputFile 被替换文件文件路径
      */
     private void copyFile(File inputFile, File outputFile) {
-        if(!inputFile.exists()){
+        if (!inputFile.exists()) {
             return;
         }
         if (inputFile.isDirectory()) {
@@ -196,10 +197,10 @@ public class Command {
                 }
                 sb.append(line).append("\r\n");
             }
-            reader.close();
+            close(reader);
             FileOutputStream out = new FileOutputStream(apkToolYmlFile);
             out.write(sb.toString().getBytes());
-            out.close();
+            close(out);
             if (callback != null) {
                 callback.receiver("更新 apktool.yml 完成 ~ " + "\r\n");
             }
@@ -207,6 +208,16 @@ public class Command {
             e.printStackTrace();
             return false;
         }
+        return true;
+    }
+
+    /**
+     * 更改string.xml文件内容
+     *
+     * @param appFolderName 目标文件夹
+     * @param listStrings   替换的string资源List
+     */
+    public boolean updateResourceStrings(String appFolderName, List<Strings> listStrings) {
         return true;
     }
 
@@ -250,17 +261,23 @@ public class Command {
      */
     public String getVersionCode(String versionName) {
         char[] chars = versionName.toCharArray();
-        StringBuilder sb = new StringBuilder("4000");
         for (char c : chars) {
             if (c == '.') {
-                c = '0';
+                continue;
             }
             if (!Character.isDigit(c)) {
                 throw new NumberFormatException("版本填写错误，不能包涵非数字和.点的字符");
             }
-            sb.append(c);
         }
-        return sb.toString();
+        int version = 100000000;
+        String[] strings = versionName.split("\\.");
+        if (strings.length != 3) {
+            throw new NumberFormatException("版本填写错误，请使用x.x.x的格式");
+        }
+        int major = Integer.parseInt(strings[0]) * 10000;
+        int minor = Integer.parseInt(strings[1]) * 100;
+        int build = Integer.parseInt(strings[2]);
+        return String.valueOf(version + major + minor + build);
     }
 
     /**
