@@ -236,7 +236,7 @@ public class Command {
                 strings.forEach(s -> {
                     if (s.getName().equals(name)) {
                         element.setText(s.getValue());
-                        callback("修改strings.xml name='" + name + "' value='" + s.getValue() + "'");
+                        callback("修改 strings.xml name='" + name + "' value='" + s.getValue() + "'");
                     }
                 });
             });
@@ -266,7 +266,7 @@ public class Command {
                 bools.forEach(s -> {
                     if (s.getName().equals(name)) {
                         element.setText(s.getValue());
-                        callback("修改bools.xml name='" + name + "' value='" + s.getValue() + "'");
+                        callback("修改 bools.xml name='" + name + "' value='" + s.getValue() + "'");
                     }
                 });
             });
