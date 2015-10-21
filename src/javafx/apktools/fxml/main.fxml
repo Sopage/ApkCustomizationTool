@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.apktools.MainController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="100.0" />
@@ -19,29 +18,54 @@
         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
         <Label text="产品名称:  " GridPane.halignment="RIGHT" />
-        <Label text="发布渠道:  " GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
         <ComboBox fx:id="product" onAction="#productAction" GridPane.columnIndex="1" />
-        <ComboBox fx:id="person" onAction="#personAction" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <TextField fx:id="version" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <ComboBox fx:id="channel" onAction="#channelAction" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Label text="定制人员:  " GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <ComboBox fx:id="person" onAction="#personAction" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label text="发布渠道:  " GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+        <ComboBox fx:id="channel" onAction="#channelAction" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Button mnemonicParsing="false" onAction="#btnAddChannel" text="添加" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <GridPane.margin>
+                <Insets left="6.0" right="6.0" />
+            </GridPane.margin>
+        </Button>
         <Label text="版本名称:  " GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-        <Label text="选择文件:  " GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-        <Button mnemonicParsing="false" onAction="#btnCustomAction" text="开始定制" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-        <ImageView fx:id="image" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647" />
+        <TextField fx:id="version" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Label text="选择APK文件:  " GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
         <TextField fx:id="buildFile" editable="false" maxWidth="-Infinity" onMouseClicked="#btnFileChooser" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <Button mnemonicParsing="false" onAction="#btnFileChooser" text="选择" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4">
-             <GridPane.margin>
+            <GridPane.margin>
                 <Insets left="6.0" right="6.0" />
-             </GridPane.margin>
+            </GridPane.margin>
         </Button>
-        <Button mnemonicParsing="false" onAction="#btnAddChannel" text="添加" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
-             <GridPane.margin>
+        <Label text="选择资源文件:  " GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+        <TextField fx:id="resFile" editable="false" maxWidth="-Infinity" onMouseClicked="#btnResFileChooser" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        <Button mnemonicParsing="false" onAction="#btnResFileChooser" text="选择" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+            <GridPane.margin>
                 <Insets left="6.0" right="6.0" />
-             </GridPane.margin>
+            </GridPane.margin>
         </Button>
+        <Label text="精品推荐:  " GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+        <HBox alignment="CENTER" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="6">
+            <children>
+                <CheckBox fx:id="checkBoxDisplay" selected="true" text="显示" onMouseClicked="#clickDisplay">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </CheckBox>
+                <CheckBox fx:id="checkBoxHide" text="隐藏" onMouseClicked="#clickHide">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </CheckBox>
+            </children>
+        </HBox>
+
+        <ImageView fx:id="image" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647" />
+        <Button mnemonicParsing="false" onAction="#btnCustomAction" text="开始定制" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
     </children>
 </GridPane>

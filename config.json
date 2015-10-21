@@ -17,7 +17,7 @@
   ],
   "product": [
     {
-      "name": "全国违章查询"
+      "name": "车友违章查询"
     }
   ],
   "manifest": {
@@ -31,30 +31,20 @@
   "resource": {
     "strings": [
       {
-        "name": "name1",
-        "value": "value1"
-      },
+        "name": "name",
+        "value": "value"
+      }
+    ],
+    "bools": [
       {
-        "name": "name2",
-        "value": "value2"
-      },
-      {
-        "name": "name3",
-        "value": "value3"
+        "name": "name",
+        "value": "value"
       }
     ],
     "colors": [
       {
-        "name": "name1",
-        "value": "value1"
-      },
-      {
-        "name": "name2",
-        "value": "value2"
-      },
-      {
-        "name": "name3",
-        "value": "value3"
+        "name": "name",
+        "value": "value"
       }
     ]
   }

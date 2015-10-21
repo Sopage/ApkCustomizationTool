@@ -8,6 +8,7 @@ import java.util.List;
 public class Resource {
 
     private List<Strings> strings;
+    private List<Bools> bools;
 
     public List<Strings> getStrings() {
         return strings;
@@ -15,5 +16,13 @@ public class Resource {
 
     public void setStrings(List<Strings> strings) {
         this.strings = strings;
+    }
+
+    public List<Bools> getBools() {
+        return bools;
+    }
+
+    public void setBools(List<Bools> bools) {
+        this.bools = bools;
     }
 }

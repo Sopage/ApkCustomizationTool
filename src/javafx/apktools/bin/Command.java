@@ -2,6 +2,8 @@ package javafx.apktools.bin;
 
 import javafx.apktools.model.manifest.Manifest;
 import javafx.apktools.model.manifest.MetaData;
+import javafx.apktools.model.resource.Bools;
+import javafx.apktools.model.resource.Resource;
 import javafx.apktools.model.resource.Strings;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -109,17 +111,19 @@ public class Command {
         if (inputFile.isDirectory()) {
             File[] listFile = inputFile.listFiles((pathname) -> !pathname.getName().startsWith("."));
             for (File inFile : listFile) {
-                File outFile = new File(outputFile.getPath() + File.separator + inFile.getName());
-                copyFile(inFile, outFile);
+                copyFile(inFile, outputFile);
             }
         } else {
-            if (!outputFile.exists()) {
-                return;
+            File replaceFile = new File(outputFile + File.separator + "res" + File.separator + inputFile.getParentFile().getName() + File.separator + inputFile.getName());
+            File replaceFileV4 = new File(outputFile + File.separator + "res" + File.separator + inputFile.getParentFile().getName() + "-v4" + File.separator + inputFile.getName());
+            if (replaceFile.exists()) {
+                copyFileStream(inputFile, replaceFile);
+                callback(String.format("拷贝文件 [%s] 至 ——> [%s]", inputFile.getPath(), replaceFile.getPath()));
             }
-            if (callback != null) {
-                callback.receiver(String.format("拷贝文件 [%s] 至——————> [%s] \r\n", inputFile.getPath(), outputFile.getPath()));
+            if (replaceFileV4.exists()) {
+                copyFileStream(inputFile, replaceFileV4);
+                callback(String.format("拷贝文件 [%s] 至 ——> [%s]", inputFile.getPath(), replaceFileV4.getPath()));
             }
-            copyFileStream(inputFile, outputFile);
         }
     }
 
@@ -146,9 +150,7 @@ public class Command {
                     Attribute attribute = s.attribute("name");
                     if (attribute.getValue().equals(name)) {
                         s.attribute("value").setValue(value);
-                        if (callback != null) {
-                            callback.receiver("更新 AndroidManifest.xml meta-data name=" + attribute.getValue() + " value=" + value + "\r\n");
-                        }
+                        callback("更新 AndroidManifest.xml meta-data name='" + attribute.getValue() + "' value='" + value + "'");
                     }
                 }
             }
@@ -161,9 +163,7 @@ public class Command {
             XMLWriter writer = new XMLWriter(new FileOutputStream(androidManifestFile));
             writer.write(document);
             writer.close();
-            if (callback != null) {
-                callback.receiver("更新 AndroidManifest.xml 完成 ~ " + "\r\n");
-            }
+            callback("更新 AndroidManifest.xml 完成 ~ ");
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -186,14 +186,10 @@ public class Command {
             while ((line = reader.readLine()) != null) {
                 if (line.contains("versionCode")) {
                     line = "  versionCode: '" + getVersionCode(versionName) + "'";
-                    if (callback != null) {
-                        callback.receiver("更新 apktool.yml " + line + "\r\n");
-                    }
+                    callback("更新 apktool.yml " + line);
                 } else if (line.contains("versionName")) {
                     line = "  versionName: '" + versionName + "'";
-                    if (callback != null) {
-                        callback.receiver("更新 apktool.yml " + line + "\r\n");
-                    }
+                    callback("更新 apktool.yml " + line);
                 }
                 sb.append(line).append("\r\n");
             }
@@ -201,9 +197,7 @@ public class Command {
             FileOutputStream out = new FileOutputStream(apkToolYmlFile);
             out.write(sb.toString().getBytes());
             close(out);
-            if (callback != null) {
-                callback.receiver("更新 apktool.yml 完成 ~ " + "\r\n");
-            }
+            callback("更新 apktool.yml 完成 ~ ");
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -215,10 +209,73 @@ public class Command {
      * 更改string.xml文件内容
      *
      * @param appFolderName 目标文件夹
-     * @param listStrings   替换的string资源List
+     * @param resource      替换的resource资源
      */
-    public boolean updateResourceStrings(String appFolderName, List<Strings> listStrings) {
+    public boolean updateResource(String appFolderName, Resource resource) {
+        String valuesFolderPath = appFolderName + File.separator + "res" + File.separator + "values" + File.separator;
+        updateStrings(new File(valuesFolderPath + "strings.xml"), resource.getStrings());
+        updateBools(new File(valuesFolderPath + "bools.xml"), resource.getBools());
         return true;
+    }
+
+    /**
+     * 修改strings.xml文件内容
+     *
+     * @param file    strings文件
+     * @param strings 修改的值列表
+     */
+    private void updateStrings(File file, List<Strings> strings) {
+        try {
+            if (strings == null || strings.isEmpty()) {
+                return;
+            }
+            Document document = new SAXReader().read(file);
+            List<Element> elements = document.getRootElement().elements();
+            elements.forEach(element -> {
+                final String name = element.attribute("name").getValue();
+                strings.forEach(s -> {
+                    if (s.getName().equals(name)) {
+                        element.setText(s.getValue());
+                        callback("修改strings.xml name='" + name + "' value='" + s.getValue() + "'");
+                    }
+                });
+            });
+            XMLWriter writer = new XMLWriter(new FileOutputStream(file));
+            writer.write(document);
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 修改bools.xml文件内容
+     *
+     * @param file  bools文件
+     * @param bools 修改的值列表
+     */
+    private void updateBools(File file, List<Bools> bools) {
+        try {
+            if (bools == null || bools.isEmpty()) {
+                return;
+            }
+            Document document = new SAXReader().read(file);
+            List<Element> elements = document.getRootElement().elements();
+            elements.forEach(element -> {
+                final String name = element.attribute("name").getValue();
+                bools.forEach(s -> {
+                    if (s.getName().equals(name)) {
+                        element.setText(s.getValue());
+                        callback("修改bools.xml name='" + name + "' value='" + s.getValue() + "'");
+                    }
+                });
+            });
+            XMLWriter writer = new XMLWriter(new FileOutputStream(file));
+            writer.write(document);
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -237,9 +294,7 @@ public class Command {
             reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-                if (callback != null) {
-                    callback.receiver(line + "\r\n");
-                }
+                callback(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -339,6 +394,12 @@ public class Command {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private void callback(String text) {
+        if (callback != null) {
+            callback.receiver(text);
         }
     }
 }

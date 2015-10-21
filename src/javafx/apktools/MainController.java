@@ -4,20 +4,15 @@ import javafx.apktools.model.BuildParams;
 import javafx.apktools.model.config.Channel;
 import javafx.apktools.model.config.Person;
 import javafx.apktools.model.config.Product;
+import javafx.apktools.model.resource.Bools;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 
 import java.io.File;
 import java.net.URL;
@@ -32,13 +27,15 @@ public class MainController extends Controller<MainController> {
     public ComboBox<Product> product;
     public ComboBox<Channel> channel;
     public ComboBox<Person> person;
-    public TextField version, buildFile;
+    public TextField version, buildFile, resFile;
+    public CheckBox checkBoxDisplay, checkBoxHide;
     public ImageView image;
 
     private FileChooser fileChooser;
+    private DirectoryChooser directoryChooser;
     public Stage buildStage, addChannelStage;
 
-    private BuildParams info = new BuildParams();
+    private BuildParams buildInfo = new BuildParams();
 
     public void btnCustomAction() {
         if (!actionTime()) {
@@ -49,16 +46,18 @@ public class MainController extends Controller<MainController> {
             new Alert(Alert.AlertType.WARNING, "请填写版本名称", ButtonType.OK).show();
             return;
         }
-        info.version = versionText;
-        if (info.apkFile == null) {
+        buildInfo.version = versionText;
+        if (buildInfo.apkFile == null) {
             new Alert(Alert.AlertType.WARNING, "请选择apk文件", ButtonType.OK).show();
             return;
         }
+        buildInfo.jp = checkBoxDisplay.isSelected();
+        buildInfo.resource.getBools().add(new Bools("showJP", String.valueOf(checkBoxDisplay.isSelected())));
         if (getBuildStage() != null) {
             if (!buildStage.isShowing()) {
                 buildStage.show();
             }
-            getController(ApkBuildController.class).build(info);
+            getController(ApkBuildController.class).build(buildInfo);
         }
     }
 
@@ -69,12 +68,30 @@ public class MainController extends Controller<MainController> {
         if (fileChooser == null) {
             fileChooser = new FileChooser();
         }
-        List<File> list = new FileChooser().showOpenMultipleDialog(Main.stage.getOwner());
+        ObservableList<FileChooser.ExtensionFilter> observableList = fileChooser.getExtensionFilters();
+        observableList.clear();
+        observableList.addAll(new FileChooser.ExtensionFilter("apk文件", "*.apk"));
+        List<File> list = fileChooser.showOpenMultipleDialog(Main.stage.getOwner());
         if (list != null && list.size() > 0) {
             File file = list.get(0);
-            info.apkFile = file;
+            buildInfo.apkFile = file;
             buildFile.setText(file.getName());
         }
+    }
+
+    public void btnResFileChooser() {
+        if (!actionTime()) {
+            return;
+        }
+        if (directoryChooser == null) {
+            directoryChooser = new DirectoryChooser();
+        }
+        File directory = directoryChooser.showDialog(Main.stage.getOwner());
+        if (directory == null) {
+            return;
+        }
+        resFile.setText(directory.getPath());
+        buildInfo.resFolder = directory;
     }
 
     public void btnAddChannel() {
@@ -86,23 +103,31 @@ public class MainController extends Controller<MainController> {
         }
     }
 
+    public void clickDisplay(){
+        checkBoxHide.setSelected(!checkBoxDisplay.isSelected());
+    }
+
+    public void clickHide(){
+        checkBoxDisplay.setSelected(!checkBoxHide.isSelected());
+    }
+
     public void productAction() {
-        info.product = product.getSelectionModel().getSelectedItem();
+        buildInfo.product = product.getSelectionModel().getSelectedItem();
     }
 
     public void personAction() {
-        info.person = person.getSelectionModel().getSelectedItem();
+        buildInfo.person = person.getSelectionModel().getSelectedItem();
     }
 
     public void channelAction() {
-        info.channel.clear();
+        buildInfo.channel.clear();
         Channel c = channel.getSelectionModel().getSelectedItem();
-        if ("ALL".equals(c.mark)) {
+        if ("All".equals(c.mark)) {
             Channel[] cc = new Channel[channel.getItems().size()];
             channel.getItems().toArray(cc);
-            info.channel.addAll(Arrays.asList(cc));
+            buildInfo.channel.addAll(Arrays.asList(cc));
         } else {
-            info.channel.add(c);
+            buildInfo.channel.add(c);
         }
     }
 
@@ -127,32 +152,35 @@ public class MainController extends Controller<MainController> {
         ObservableList list = product.getItems();
         list.addAll(products);
         product.getSelectionModel().select(0);
-        info.product = product.getSelectionModel().getSelectedItem();
+        buildInfo.product = product.getSelectionModel().getSelectedItem();
 
         List<Channel> channels = ApkConfig.getConfig().getConfigInfo().getChannel();
         addDefChannel(channels);
         list = channel.getItems();
         list.addAll(channels);
         channel.getSelectionModel().select(0);
-        info.channel.addAll(channels);
+        buildInfo.channel.addAll(channels);
 
         List<Person> persons = ApkConfig.getConfig().getConfigInfo().getPerson();
         list = person.getItems();
         list.addAll(persons);
         person.getSelectionModel().select(0);
-        info.person = person.getSelectionModel().getSelectedItem();
+        buildInfo.person = person.getSelectionModel().getSelectedItem();
 
-        info.manifest = ApkConfig.getConfig().getConfigInfo().getManifest();
-        info.resource = ApkConfig.getConfig().getConfigInfo().getResource();
-        version.setText("6.1.1");
-        info.version = version.getText();
+        buildInfo.manifest = ApkConfig.getConfig().getConfigInfo().getManifest();
+        buildInfo.manifest.getMetaData().clear();
+        buildInfo.resource = ApkConfig.getConfig().getConfigInfo().getResource();
+        buildInfo.resource.getBools().clear();
+        buildInfo.resource.getStrings().clear();
+        version.setText("6.2.0");
+        buildInfo.version = version.getText();
 
     }
 
     public void addDefChannel(List<Channel> channels) {
         Channel c = new Channel();
         c.name = "全部渠道";
-        c.mark = "ALL";
+        c.mark = "All";
         channels.add(0, c);
     }
 
@@ -161,7 +189,7 @@ public class MainController extends Controller<MainController> {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("fxml/apk_build.fxml"));
                 buildStage = new Stage();
-                buildStage.setTitle("APK定制工具(YoYo~专版)");
+                buildStage.setTitle(Main.TITLE);
                 buildStage.setScene(new Scene(root));
                 buildStage.initModality(Modality.NONE);
                 buildStage.initStyle(StageStyle.UNIFIED);
@@ -186,7 +214,7 @@ public class MainController extends Controller<MainController> {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("fxml/add_channel.fxml"));
                 addChannelStage = new Stage();
-                addChannelStage.setTitle("APK定制工具(YoYo~专版)");
+                addChannelStage.setTitle(Main.TITLE);
                 addChannelStage.setScene(new Scene(root));
                 addChannelStage.initModality(Modality.WINDOW_MODAL);
                 addChannelStage.initStyle(StageStyle.UNIFIED);
