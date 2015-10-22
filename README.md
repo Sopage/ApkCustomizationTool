@@ -18,6 +18,9 @@ apk定制工具，用于渠道打包等自定义apk。此工具使用JavaFX需�
 #### 编译
 此项目结构在`IntelliJ IEDA`IDE中直接运行。在运行之前请确认使用JDK8的新语法特性。
 
+#### 截图
+![image](https://github.com/SSOOnline/ApkCustomizationTool/raw/master/screenshot/a.png)
+![image](https://github.com/SSOOnline/ApkCustomizationTool/raw/master/screenshot/b.png)
 ### 感谢以下项目
 [Apktool](http://ibotpeaches.github.io/Apktool/)<br>
 [fastjson](https://github.com/alibaba/fastjson)<br>
