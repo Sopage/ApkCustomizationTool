@@ -5,6 +5,7 @@ import javafx.apktools.model.config.Channel;
 import javafx.apktools.model.config.Person;
 import javafx.apktools.model.config.Product;
 import javafx.apktools.model.resource.Bools;
+import javafx.apktools.model.resource.Strings;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,6 +39,7 @@ public class MainController extends Controller<MainController> {
     private BuildParams buildInfo = new BuildParams();
 
     public void btnCustomAction() {
+        System.out.println(product.getSelectionModel().getSelectedItem().name);
         if (!actionTime()) {
             return;
         }
@@ -53,6 +55,7 @@ public class MainController extends Controller<MainController> {
         }
         buildInfo.jp = checkBoxDisplay.isSelected();
         buildInfo.resource.getBools().add(new Bools("showJP", String.valueOf(checkBoxDisplay.isSelected())));
+        buildInfo.resource.getStrings().add(new Strings("app_name", product.getSelectionModel().getSelectedItem().name));
         if (getBuildStage() != null) {
             if (!buildStage.isShowing()) {
                 buildStage.show();

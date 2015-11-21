@@ -1,5 +1,6 @@
 package javafx.apktools.bin;
 
+import brut.common.BrutException;
 import javafx.apktools.model.manifest.Manifest;
 import javafx.apktools.model.manifest.MetaData;
 import javafx.apktools.model.resource.Bools;
@@ -36,7 +37,15 @@ public class Command {
      * @param outPath     解压路径
      */
     public boolean decodeApk(String apkFilePath, String outPath) {
-        return executeCommand("java", "-jar", "apktool.jar", "d", "-f", apkFilePath, "-o", outPath);
+//        return executeCommand("java", "-jar", "apktool.jar", "d", "-f", apkFilePath, "-o", outPath);
+        try {
+            brut.apktool.Main.main(new String[]{"d", "-f", apkFilePath, "-o", outPath});
+            return true;
+        } catch (IOException | InterruptedException | BrutException e) {
+            e.printStackTrace();
+            callback("解包失败 !!!!!\r\n" + e.getMessage());
+        }
+        return false;
     }
 
     /**
@@ -46,7 +55,15 @@ public class Command {
      * @param buildApkOutPath    打包后的文件存放路径
      */
     public boolean buildApk(String buildApkFolderPath, String buildApkOutPath) {
-        return executeCommand("java", "-jar", "apktool.jar", "b", buildApkFolderPath, "-o", buildApkOutPath);
+//        return executeCommand("java", "-jar", "apktool.jar", "b", buildApkFolderPath, "-o", buildApkOutPath);
+        try {
+            brut.apktool.Main.main(new String[]{"b", buildApkFolderPath, "-o", buildApkOutPath});
+            return true;
+        } catch (IOException | InterruptedException | BrutException e) {
+            e.printStackTrace();
+            callback("打包失败 !!!!!\r\n" + e.getMessage());
+        }
+        return false;
     }
 
     /**
@@ -324,7 +341,7 @@ public class Command {
                 throw new NumberFormatException("版本填写错误，不能包涵非数字和.点的字符");
             }
         }
-        int version = 100000000;
+        int version = 400000000;
         String[] strings = versionName.split("\\.");
         if (strings.length != 3) {
             throw new NumberFormatException("版本填写错误，请使用x.x.x的格式");

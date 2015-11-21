@@ -54,21 +54,33 @@ public class ApkBuildController extends Controller<ApkBuildController> implement
                 String zipalignApkOutputFile = "渠道包" + File.separator + channel.name + "-" + params.product.name + "-" + params.version + ".apk";
                 setText("---------------------------  开始解包" + apkFile.getName() + "  ---------------------------");
                 //用apktool解包
-                command.decodeApk(apkFile.getPath(), buildApkFolderName);
+                if (!command.decodeApk(apkFile.getPath(), buildApkFolderName)) {
+                    setText("打包终止!!!!!!");
+                    return;
+                }
                 setText("---------------------------  解包完成，开始定制  ---------------------------");
                 //替换资源文件
                 if (params.resFolder != null) {
                     command.replaceResource(params.resFolder.getPath(), buildApkFolderName);
                 }
                 //修改AndroidManifest.xml
-                command.updateAndroidManifest(buildApkFolderName, params.manifest);
+                if (command.updateAndroidManifest(buildApkFolderName, params.manifest)) {
+                    setText("打包终止!!!!!!");
+                    return;
+                }
                 //修改apktool.yml中version的值
-                command.updateApkToolYmlVersion(buildApkFolderName, params.version);
+                if (command.updateApkToolYmlVersion(buildApkFolderName, params.version)) {
+                    setText("打包终止!!!!!!");
+                    return;
+                }
                 //修改res/values文件夹下面的资源
                 command.updateResource(buildApkFolderName, params.resource);
                 setText("---------------------------  定制完成，开始打包  ---------------------------");
                 //用apktool重新打包
-                command.buildApk(buildApkFolderName, buildApkOutputFile);
+                if (command.buildApk(buildApkFolderName, buildApkOutputFile)) {
+                    setText("打包终止!!!!!!");
+                    return;
+                }
                 setText("---------------------------  打包完成，开始签名  ---------------------------");
                 if (params.signerTSA) {
                     //带时间戳的签名
@@ -82,7 +94,7 @@ public class ApkBuildController extends Controller<ApkBuildController> implement
                 new File(zipalignApkOutputFile).getParentFile().mkdirs();
                 command.zipalign(buildApkOutputFile, zipalignApkOutputFile);
                 //删除反编译后的文件夹
-//                command.deleteFile(new File(buildApkFolderName));
+                command.deleteFile(new File(buildApkFolderName));
             }
             setText("———————————————————————————————————————————————————");
             setText("|    定制完成，你可以测试每个定制后的包是否定制正确！    |");
