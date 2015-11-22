@@ -1,13 +1,17 @@
 package javafx.apktools.model.config;
 
-/**
- * Created by sanders on 15/7/19.
- */
 public class Channel {
 
     public String name;
     public String mark;
 
+    public Channel() {
+    }
+
+    public Channel(String name, String mark) {
+        this.name = name;
+        this.mark = mark;
+    }
 
     @Override
     public int hashCode() {

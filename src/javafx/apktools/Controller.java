@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public abstract class Controller<T> implements Initializable {
+public abstract class Controller implements Initializable {
 
     private static final Map<Class, Object> CONTROLLER = new HashMap<Class, Object>();
 

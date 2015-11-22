@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AddChannelController extends Controller<AddChannelController> {
+public class AddChannelController extends Controller {
 
     public TextField channelName, channelMark;
 

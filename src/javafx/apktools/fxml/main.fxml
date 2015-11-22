@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.Group?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.apktools.MainController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="100.0" />
@@ -52,16 +53,16 @@
         <Label text="精品推荐:  " GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
         <HBox alignment="CENTER" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="6">
             <children>
-                <CheckBox fx:id="checkBoxDisplay" selected="true" text="显示" onMouseClicked="#clickDisplay">
+                <RadioButton fx:id="radioBtnDisplay" selected="true" text="显示" onMouseClicked="#clickDisplay">
                     <HBox.margin>
                         <Insets left="10.0" />
                     </HBox.margin>
-                </CheckBox>
-                <CheckBox fx:id="checkBoxHide" text="隐藏" onMouseClicked="#clickHide">
+                </RadioButton>
+                <RadioButton fx:id="radioBtnHide" text="隐藏" onMouseClicked="#clickHide">
                     <HBox.margin>
                         <Insets left="10.0" />
                     </HBox.margin>
-                </CheckBox>
+                </RadioButton>
             </children>
         </HBox>
 

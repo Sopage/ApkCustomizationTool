@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * Created by sanders on 15/7/19.
- */
 public class BuildParams {
 
     public String keyStoreFilePath;
@@ -26,7 +23,7 @@ public class BuildParams {
     public BuildParams() {
         try {
             Properties properties = new Properties();
-            FileInputStream inputStream = new FileInputStream("config.properties");
+            FileInputStream inputStream = new FileInputStream("signer.properties");
             properties.load(inputStream);
             keyStoreFilePath = properties.getProperty("KEY_STORE_FILE_PATH", "");
             keyStoreAlias = properties.getProperty("KEY_STORE_ALIAS", "");

@@ -312,17 +312,21 @@ public class Command {
             String line;
             while ((line = reader.readLine()) != null) {
                 callback(line);
+                if (line.contains("Exception") || line.contains("Unable to open")) {
+                    return false;
+                }
             }
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            callback(e.getMessage());
         } finally {
             close(reader);
             if (process != null) {
                 process.destroy();
             }
         }
-        return true;
+        return false;
     }
 
     /**

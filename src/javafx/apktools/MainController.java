@@ -1,6 +1,7 @@
 package javafx.apktools;
 
 import javafx.apktools.model.BuildParams;
+import javafx.apktools.model.Data;
 import javafx.apktools.model.config.Channel;
 import javafx.apktools.model.config.Person;
 import javafx.apktools.model.config.Product;
@@ -21,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class MainController extends Controller<MainController> {
+public class MainController extends Controller {
 
     public static long actionTime;
 
@@ -29,7 +30,7 @@ public class MainController extends Controller<MainController> {
     public ComboBox<Channel> channel;
     public ComboBox<Person> person;
     public TextField version, buildFile, resFile;
-    public CheckBox checkBoxDisplay, checkBoxHide;
+    public RadioButton radioBtnDisplay, radioBtnHide;
     public ImageView image;
 
     private FileChooser fileChooser;
@@ -39,7 +40,6 @@ public class MainController extends Controller<MainController> {
     private BuildParams buildInfo = new BuildParams();
 
     public void btnCustomAction() {
-        System.out.println(product.getSelectionModel().getSelectedItem().name);
         if (!actionTime()) {
             return;
         }
@@ -53,8 +53,8 @@ public class MainController extends Controller<MainController> {
             new Alert(Alert.AlertType.WARNING, "请选择apk文件", ButtonType.OK).show();
             return;
         }
-        buildInfo.jp = checkBoxDisplay.isSelected();
-        buildInfo.resource.getBools().add(new Bools("showJP", String.valueOf(checkBoxDisplay.isSelected())));
+        buildInfo.jp = radioBtnDisplay.isSelected();
+        buildInfo.resource.getBools().add(new Bools("showJP", String.valueOf(radioBtnDisplay.isSelected())));
         buildInfo.resource.getStrings().add(new Strings("app_name", product.getSelectionModel().getSelectedItem().name));
         if (getBuildStage() != null) {
             if (!buildStage.isShowing()) {
@@ -106,12 +106,14 @@ public class MainController extends Controller<MainController> {
         }
     }
 
-    public void clickDisplay(){
-        checkBoxHide.setSelected(!checkBoxDisplay.isSelected());
+    public void clickDisplay() {
+        radioBtnDisplay.setSelected(true);
+        radioBtnHide.setSelected(false);
     }
 
-    public void clickHide(){
-        checkBoxDisplay.setSelected(!checkBoxHide.isSelected());
+    public void clickHide() {
+        radioBtnHide.setSelected(true);
+        radioBtnDisplay.setSelected(false);
     }
 
     public void productAction() {
@@ -141,40 +143,34 @@ public class MainController extends Controller<MainController> {
         channel.getItems().remove(c);
         channel.getItems().add(c);
         channel.getSelectionModel().select(c);
-        File file = new File("渠道包" + File.separator + name);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
     }
 
     @Override
     public void initialized(URL location, ResourceBundle resources) {
         image.setImage(new Image("/ic_launcher.png"));
 
-        List<Product> products = ApkConfig.getConfig().getConfigInfo().getProduct();
+        Data data = new Data();
+        List<Product> products = data.getProduct();
         ObservableList list = product.getItems();
         list.addAll(products);
         product.getSelectionModel().select(0);
         buildInfo.product = product.getSelectionModel().getSelectedItem();
 
-        List<Channel> channels = ApkConfig.getConfig().getConfigInfo().getChannel();
+        List<Channel> channels = data.getChannel();
         addDefChannel(channels);
         list = channel.getItems();
         list.addAll(channels);
         channel.getSelectionModel().select(0);
         buildInfo.channel.addAll(channels);
 
-        List<Person> persons = ApkConfig.getConfig().getConfigInfo().getPerson();
+        List<Person> persons = data.getPerson();
         list = person.getItems();
         list.addAll(persons);
         person.getSelectionModel().select(0);
         buildInfo.person = person.getSelectionModel().getSelectedItem();
 
-        buildInfo.manifest = ApkConfig.getConfig().getConfigInfo().getManifest();
-        buildInfo.manifest.getMetaData().clear();
-        buildInfo.resource = ApkConfig.getConfig().getConfigInfo().getResource();
-        buildInfo.resource.getBools().clear();
-        buildInfo.resource.getStrings().clear();
+        buildInfo.manifest = data.getManifest();
+        buildInfo.resource = data.getResource();
         version.setText("6.2.0");
         buildInfo.version = version.getText();
 
@@ -223,9 +219,7 @@ public class MainController extends Controller<MainController> {
                 addChannelStage.initStyle(StageStyle.UNIFIED);
                 addChannelStage.setResizable(false);
                 addChannelStage.initOwner(Main.stage);
-                addChannelStage.setOnShown((event) -> {
-                    getController(AddChannelController.class).initialized(null, null);
-                });
+                addChannelStage.setOnShown((event) -> getController(AddChannelController.class).initialized(null, null));
             } catch (Exception e) {
                 e.printStackTrace();
                 addChannelStage = null;

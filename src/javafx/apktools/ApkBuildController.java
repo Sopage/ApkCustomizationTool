@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ApkBuildController extends Controller<ApkBuildController> implements Callback {
+public class ApkBuildController extends Controller implements Callback {
 
     public TextArea textArea;
     private Command command;
@@ -64,12 +64,12 @@ public class ApkBuildController extends Controller<ApkBuildController> implement
                     command.replaceResource(params.resFolder.getPath(), buildApkFolderName);
                 }
                 //修改AndroidManifest.xml
-                if (command.updateAndroidManifest(buildApkFolderName, params.manifest)) {
+                if (!command.updateAndroidManifest(buildApkFolderName, params.manifest)) {
                     setText("打包终止!!!!!!");
                     return;
                 }
                 //修改apktool.yml中version的值
-                if (command.updateApkToolYmlVersion(buildApkFolderName, params.version)) {
+                if (!command.updateApkToolYmlVersion(buildApkFolderName, params.version)) {
                     setText("打包终止!!!!!!");
                     return;
                 }
@@ -77,22 +77,31 @@ public class ApkBuildController extends Controller<ApkBuildController> implement
                 command.updateResource(buildApkFolderName, params.resource);
                 setText("---------------------------  定制完成，开始打包  ---------------------------");
                 //用apktool重新打包
-                if (command.buildApk(buildApkFolderName, buildApkOutputFile)) {
+                if (!command.buildApk(buildApkFolderName, buildApkOutputFile)) {
                     setText("打包终止!!!!!!");
                     return;
                 }
                 setText("---------------------------  打包完成，开始签名  ---------------------------");
                 if (params.signerTSA) {
                     //带时间戳的签名
-                    command.signerApkByTime(params.keyStoreFilePath, buildApkOutputFile, params.keyStoreAlias, params.keyStorePassword);
+                    if(!command.signerApkByTime(params.keyStoreFilePath, buildApkOutputFile, params.keyStoreAlias, params.keyStorePassword)){
+                        setText("打包终止!!!!!!");
+                        return;
+                    }
                 } else {
                     //不带时间戳的签名
-                    command.signerApk(params.keyStoreFilePath, buildApkOutputFile, params.keyStoreAlias, params.keyStorePassword);
+                    if(!command.signerApk(params.keyStoreFilePath, buildApkOutputFile, params.keyStoreAlias, params.keyStorePassword)){
+                        setText("打包终止!!!!!!");
+                        return;
+                    }
                 }
                 setText("---------------------------  签名完成，开始优化  ---------------------------");
                 //zipalign优化
                 new File(zipalignApkOutputFile).getParentFile().mkdirs();
-                command.zipalign(buildApkOutputFile, zipalignApkOutputFile);
+                if(!command.zipalign(buildApkOutputFile, zipalignApkOutputFile)){
+                    setText("打包终止!!!!!!");
+                    return;
+                }
                 //删除反编译后的文件夹
                 command.deleteFile(new File(buildApkFolderName));
             }

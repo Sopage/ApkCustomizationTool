@@ -1,17 +1,14 @@
 package javafx.apktools.model.resource;
 
-/**
- * Created by sanders on 15/10/21.
- */
-public class Values {
+public class NV {
 
     private String name;
     private String value;
 
-    public Values() {
+    public NV() {
     }
 
-    public Values(String name, String value) {
+    public NV(String name, String value) {
         this.name = name;
         this.value = value;
     }

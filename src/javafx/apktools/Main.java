@@ -11,7 +11,7 @@ import java.io.File;
 
 public class Main extends Application {
 
-    public static final String TITLE = "APK定制工具(v1.1)(YoYo~专版)";
+    public static final String TITLE = "APK定制工具";
     public static Stage stage;
 
     @Override

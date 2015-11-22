@@ -1,6 +1,6 @@
 package javafx.apktools.model.resource;
 
-public class Strings extends Values {
+public class Strings extends NV {
     public Strings(){
         super();
     }

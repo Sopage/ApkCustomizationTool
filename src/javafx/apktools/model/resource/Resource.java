@@ -1,28 +1,32 @@
 package javafx.apktools.model.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by sanders on 15/8/16.
- */
 public class Resource {
 
     private List<Strings> strings;
     private List<Bools> bools;
 
-    public List<Strings> getStrings() {
-        return strings;
+    public Resource(){
+        strings = new ArrayList<>();
+        bools = new ArrayList<>();
     }
 
-    public void setStrings(List<Strings> strings) {
-        this.strings = strings;
+    public void addString(String name, String value){
+        strings.add(new Strings(name, value));
+    }
+
+    public void addBool(String name, String value){
+        bools.add(new Bools(name, value));
+    }
+
+    public List<Strings> getStrings() {
+        return strings;
     }
 
     public List<Bools> getBools() {
         return bools;
     }
 
-    public void setBools(List<Bools> bools) {
-        this.bools = bools;
-    }
 }
