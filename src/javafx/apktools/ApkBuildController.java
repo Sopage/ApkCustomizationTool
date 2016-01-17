@@ -58,7 +58,7 @@ public class ApkBuildController extends Controller implements Callback {
                     setText("打包终止!!!!!!");
                     return;
                 }
-                setText("---------------------------  解包完成，开始定制  ---------------------------");
+                setText("---------------------------  开始定制  ---------------------------");
                 //替换资源文件
                 if (params.resFolder != null) {
                     command.replaceResource(params.resFolder.getPath(), buildApkFolderName);
@@ -75,13 +75,13 @@ public class ApkBuildController extends Controller implements Callback {
                 }
                 //修改res/values文件夹下面的资源
                 command.updateResource(buildApkFolderName, params.resource);
-                setText("---------------------------  定制完成，开始打包  ---------------------------");
+                setText("---------------------------  开始打包  ---------------------------");
                 //用apktool重新打包
                 if (!command.buildApk(buildApkFolderName, buildApkOutputFile)) {
                     setText("打包终止!!!!!!");
                     return;
                 }
-                setText("---------------------------  打包完成，开始签名  ---------------------------");
+                setText("---------------------------  开始签名  ---------------------------");
                 if (params.signerTSA) {
                     //带时间戳的签名
                     if(!command.signerApkByTime(params.keyStoreFilePath, buildApkOutputFile, params.keyStoreAlias, params.keyStorePassword)){
@@ -95,7 +95,7 @@ public class ApkBuildController extends Controller implements Callback {
                         return;
                     }
                 }
-                setText("---------------------------  签名完成，开始优化  ---------------------------");
+                setText("---------------------------  开始优化  ---------------------------");
                 //zipalign优化
                 new File(zipalignApkOutputFile).getParentFile().mkdirs();
                 if(!command.zipalign(buildApkOutputFile, zipalignApkOutputFile)){

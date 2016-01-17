@@ -160,6 +160,7 @@ public class Command {
             Element element = document.getRootElement().element("application");
             List<Element> list = element.elements("meta-data");
             List<MetaData> metaData = manifest.getMetaData();
+            boolean isUpdate = false;
             for (MetaData data : metaData) {
                 String name = data.getName();
                 String value = data.getValue();
@@ -167,6 +168,7 @@ public class Command {
                     Attribute attribute = s.attribute("name");
                     if (attribute.getValue().equals(name)) {
                         s.attribute("value").setValue(value);
+                        isUpdate = true;
                         callback("更新 AndroidManifest.xml meta-data name='" + attribute.getValue() + "' value='" + value + "'");
                     }
                 }
@@ -177,10 +179,12 @@ public class Command {
 //            format.setIndent(true);
 //            format.setIndentSize(4);
 //            XMLWriter writer = new XMLWriter(new FileOutputStream(androidManifestFile), format);
-            XMLWriter writer = new XMLWriter(new FileOutputStream(androidManifestFile));
-            writer.write(document);
-            writer.close();
-            callback("更新 AndroidManifest.xml 完成 ~ ");
+            if(isUpdate){
+                XMLWriter writer = new XMLWriter(new FileOutputStream(androidManifestFile));
+                writer.write(document);
+                writer.close();
+                callback("更新 AndroidManifest.xml 完成 ~ ");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
