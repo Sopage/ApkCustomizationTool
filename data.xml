@@ -2,8 +2,8 @@
 <data>
     <!-- 产品名称 -->
     <product>
-        <item name="全国违章查询"/>
-        <item name="驾考宝典"/>
+        <item name="App-One"/>
+        <item name="App-Two"/>
     </product>
 
     <!-- 渠道配置 -->
