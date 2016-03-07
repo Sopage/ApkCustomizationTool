@@ -20,8 +20,8 @@ apk定制工具，用于渠道打包等自定义apk。此工具使用JavaFX需�
 此项目结构在`IntelliJ IEDA`中直接运行。在运行之前请确认使用JDK8。
 
 #### 截图
-![image](https://github.com/SSOOnline/ApkCustomizationTool/raw/master/screenshot/a.png)
-![image](https://github.com/SSOOnline/ApkCustomizationTool/raw/master/screenshot/b.png)
+![image](https://github.com/SSOOnline/ApkCustomizationTool/raw/master/screenshot/1.png)
+![image](https://github.com/SSOOnline/ApkCustomizationTool/raw/master/screenshot/2.png)
 ### 感谢以下项目
 [Apktool](http://ibotpeaches.github.io/Apktool/)<br>
 [dom4j]()

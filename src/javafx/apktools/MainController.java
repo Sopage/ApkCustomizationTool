@@ -171,7 +171,7 @@ public class MainController extends Controller {
 
         buildInfo.manifest = data.getManifest();
         buildInfo.resource = data.getResource();
-        version.setText("6.2.0");
+        version.setText("1.0.0");
         buildInfo.version = version.getText();
 
     }

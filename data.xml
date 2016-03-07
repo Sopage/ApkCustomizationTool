@@ -2,15 +2,16 @@
 <data>
     <!-- 产品名称 -->
     <product>
-        <item name="App-One"/>
-        <item name="App-Two"/>
+        <item name="产品1"/>
+        <item name="产品2"/>
     </product>
 
     <!-- 渠道配置 -->
     <channel>
         <!-- mark是渠道标记, name是渠道名称 -->
         <item mark="Google" name="Google Play"/>
-        <item mark="360" name="360app"/>
+        <item mark="360" name="360"/>
+        <item mark="myApp" name="应用宝"/>
     </channel>
 
     <!-- 打包人员 -->
