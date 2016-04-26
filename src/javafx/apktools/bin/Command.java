@@ -1,6 +1,5 @@
 package javafx.apktools.bin;
 
-import brut.common.BrutException;
 import javafx.apktools.model.manifest.Manifest;
 import javafx.apktools.model.manifest.MetaData;
 import javafx.apktools.model.resource.Bools;
@@ -41,7 +40,7 @@ public class Command {
         try {
             brut.apktool.Main.main(new String[]{"d", "-f", apkFilePath, "-o", outPath});
             return true;
-        } catch (IOException | InterruptedException | BrutException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             callback("解包失败 !!!!!\r\n" + e.getMessage());
         }
@@ -59,7 +58,7 @@ public class Command {
         try {
             brut.apktool.Main.main(new String[]{"b", buildApkFolderPath, "-o", buildApkOutPath});
             return true;
-        } catch (IOException | InterruptedException | BrutException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             callback("打包失败 !!!!!\r\n" + e.getMessage());
         }
