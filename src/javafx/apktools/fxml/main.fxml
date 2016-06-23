@@ -4,7 +4,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.Group?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.apktools.MainController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="100.0" />
@@ -14,7 +13,6 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" />
-        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -50,23 +48,7 @@
                 <Insets left="6.0" right="6.0" />
             </GridPane.margin>
         </Button>
-        <Label text="精品推荐:  " GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-        <HBox alignment="CENTER" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="6">
-            <children>
-                <RadioButton fx:id="radioBtnDisplay" selected="true" text="显示" onMouseClicked="#clickDisplay">
-                    <HBox.margin>
-                        <Insets left="10.0" />
-                    </HBox.margin>
-                </RadioButton>
-                <RadioButton fx:id="radioBtnHide" text="隐藏" onMouseClicked="#clickHide">
-                    <HBox.margin>
-                        <Insets left="10.0" />
-                    </HBox.margin>
-                </RadioButton>
-            </children>
-        </HBox>
-
-        <ImageView fx:id="image" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647" />
-        <Button mnemonicParsing="false" onAction="#btnCustomAction" text="开始定制" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+        <ImageView fx:id="image" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647" fitWidth="160" fitHeight="160"/>
+        <Button mnemonicParsing="false" onAction="#btnCustomAction" text="开始定制" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
     </children>
 </GridPane>

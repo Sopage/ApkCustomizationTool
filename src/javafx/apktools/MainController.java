@@ -30,7 +30,6 @@ public class MainController extends Controller {
     public ComboBox<Channel> channel;
     public ComboBox<Person> person;
     public TextField version, buildFile, resFile;
-    public RadioButton radioBtnDisplay, radioBtnHide;
     public ImageView image;
 
     private FileChooser fileChooser;
@@ -53,8 +52,6 @@ public class MainController extends Controller {
             new Alert(Alert.AlertType.WARNING, "请选择apk文件", ButtonType.OK).show();
             return;
         }
-        buildInfo.jp = radioBtnDisplay.isSelected();
-        buildInfo.resource.getBools().add(new Bools("showJP", String.valueOf(radioBtnDisplay.isSelected())));
         buildInfo.resource.getStrings().add(new Strings("app_name", product.getSelectionModel().getSelectedItem().name));
         if (getBuildStage() != null) {
             if (!buildStage.isShowing()) {
@@ -106,16 +103,6 @@ public class MainController extends Controller {
         }
     }
 
-    public void clickDisplay() {
-        radioBtnDisplay.setSelected(true);
-        radioBtnHide.setSelected(false);
-    }
-
-    public void clickHide() {
-        radioBtnHide.setSelected(true);
-        radioBtnDisplay.setSelected(false);
-    }
-
     public void productAction() {
         buildInfo.product = product.getSelectionModel().getSelectedItem();
     }
@@ -147,7 +134,7 @@ public class MainController extends Controller {
 
     @Override
     public void initialized(URL location, ResourceBundle resources) {
-        image.setImage(new Image("/ic_launcher.png"));
+        image.setImage(new Image("/android_heander.png"));
 
         Data data = new Data();
         List<Product> products = data.getProduct();

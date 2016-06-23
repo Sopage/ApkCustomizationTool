@@ -348,7 +348,7 @@ public class Command {
                 throw new NumberFormatException("版本填写错误，不能包涵非数字和.点的字符");
             }
         }
-        int version = 400000000;
+        int version = 100000000;
         String[] strings = versionName.split("\\.");
         if (strings.length != 3) {
             throw new NumberFormatException("版本填写错误，请使用x.x.x的格式");
