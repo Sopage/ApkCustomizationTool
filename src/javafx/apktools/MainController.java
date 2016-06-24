@@ -5,7 +5,6 @@ import javafx.apktools.model.Data;
 import javafx.apktools.model.config.Channel;
 import javafx.apktools.model.config.Person;
 import javafx.apktools.model.config.Product;
-import javafx.apktools.model.resource.Bools;
 import javafx.apktools.model.resource.Strings;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -137,6 +136,10 @@ public class MainController extends Controller {
         image.setImage(new Image("/android_heander.png"));
 
         Data data = new Data();
+        buildInfo.appName = data.getAppName();
+        buildInfo.channelName = data.getChannelName();
+        buildInfo.personName = data.getPersonName();
+
         List<Product> products = data.getProduct();
         ObservableList list = product.getItems();
         list.addAll(products);

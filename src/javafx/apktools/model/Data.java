@@ -16,6 +16,9 @@ import java.util.List;
 
 public class Data {
 
+    private String appName;
+    private String channelName;
+    private String personName;
     private List<Product> product = new ArrayList<>();
     private List<Channel> channel = new ArrayList<>();
     private List<Person> person = new ArrayList<>();
@@ -28,18 +31,21 @@ public class Data {
             Element element = document.getRootElement();
 
             Element productElement = element.element("product");
+            appName = productElement.attribute("name").getValue();
             List<Element> elements = productElement.elements();
             for (Element e : elements) {
                 product.add(new Product(e.attribute("name").getValue()));
             }
 
             Element channelElement = element.element("channel");
+            channelName = channelElement.attribute("name").getValue();
             elements = channelElement.elements();
             for (Element e : elements) {
                 channel.add(new Channel(e.attribute("name").getValue(), e.attribute("mark").getValue()));
             }
 
             Element personElement = element.element("person");
+            personName = personElement.attribute("name").getValue();
             elements = personElement.elements();
             for (Element e : elements) {
                 person.add(new Person(e.attribute("name").getValue(), e.attribute("mark").getValue()));
@@ -90,5 +96,17 @@ public class Data {
 
     public Resource getResource() {
         return resource;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public String getPersonName() {
+        return personName;
     }
 }

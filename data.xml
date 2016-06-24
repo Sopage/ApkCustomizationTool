@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
     <!-- 产品名称 -->
-    <product>
+    <product name="app_name"><!-- name属性值为string.xml内的app名称 -->
         <item name="产品1"/>
         <item name="产品2"/>
     </product>
 
     <!-- 渠道配置 -->
-    <channel>
+    <channel name="channel_name"><!-- name属性值为AndroidManifest.xml meta-data的渠道key名称 -->
         <!-- mark是渠道标记, name是渠道名称 -->
         <item mark="Google" name="Google Play"/>
         <item mark="360" name="360"/>
@@ -15,7 +15,7 @@
     </channel>
 
     <!-- 打包人员 -->
-    <person>
+    <person name="person_name"><!-- name属性值为AndroidManifest.xml meta-data的打包人员key名称 -->
         <!-- mark是人员标记, name是打包人名字 -->
         <item mark="Sanders" name="Sanders"/>
     </person>

@@ -41,10 +41,11 @@ public class BuildParams {
     public File resFolder;
     public Product product;
     public List<Channel> channel = new ArrayList<>();
+    public String appName;
+    public String channelName;
     public Person person;
+    public String personName;
     public Manifest manifest;
     public String version;
     public Resource resource;
-    public boolean jp;
-
 }
