@@ -1,4 +1,4 @@
-# ApkCustomizationTool
+# ApkCustomizationTool [![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
 apk定制工具，用于渠道打包等自定义apk。此工具使用JavaFX开发需要JDK1.8的支持。<br>
 此工具适合渠道及相关人员!(不懂编程概念的相关人员)<br>
 注意:请在环境变量里面配置好`jarsigner`签名工具和`zipalign`优化工具<br>
@@ -31,3 +31,5 @@ apk定制工具，用于渠道打包等自定义apk。此工具使用JavaFX开�
 ### 感谢以下项目
 [Apktool](http://ibotpeaches.github.io/Apktool/)<br>
 [dom4j]()
+
+# [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
